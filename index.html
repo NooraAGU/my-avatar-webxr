@@ -1,53 +1,67 @@
-<script type="module">
-  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js';
-  import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/loaders/GLTFLoader.js';
-  import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/controls/OrbitControls.js';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ready Player Me Avatar</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: #fff; }
+  </style>
+</head>
+<body>
+  <script type="module">
+    // Import Three.js and modules
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js';
+    import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/loaders/GLTFLoader.js';
+    import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/controls/OrbitControls.js';
 
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-  const renderer = new THREE.WebGLRenderer({antialias:true});
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
-
-  // Lights
-  const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1.2);
-  scene.add(hemiLight);
-  const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  dirLight.position.set(1,2,3);
-  scene.add(dirLight);
-
-  // Controls
-  const controls = new OrbitControls(camera, renderer.domElement);
-  controls.target.set(0,0,0);
-  controls.update();
-
-  camera.position.set(0, 1.5, 5);
-
-  // Load avatar
-  const loader = new GLTFLoader();
-  loader.load(
-    'avatar.glb',
-    function(gltf) {
-      const avatar = gltf.scene;
-      avatar.position.set(0, -0.5, 0);
-      avatar.scale.set(1,1,1);
-      scene.add(avatar);
-      animate();
-    },
-    undefined,
-    function(error) {
-      console.error('Error loading GLB:', error);
-    }
-  );
-
-  function animate() {
-    requestAnimationFrame(animate);
-    renderer.render(scene, camera);
-  }
-
-  window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
+    // Scene setup
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({antialias:true});
     renderer.setSize(window.innerWidth, window.innerHeight);
-  });
-</script>
+    document.body.appendChild(renderer.domElement);
+
+    // Lighting
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1.2);
+    scene.add(hemiLight);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    dirLight.position.set(1,2,3);
+    scene.add(dirLight);
+
+    // Orbit Controls
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.target.set(0,0,0);
+    controls.update();
+
+    camera.position.set(0, 1.5, 5);
+
+    // Load GLB avatar
+    const loader = new GLTFLoader();
+    loader.load(
+      'avatar.glb', // make sure avatar.glb is in the same folder
+      function(gltf) {
+        const avatar = gltf.scene;
+        avatar.position.set(0, -0.5, 0);
+        avatar.scale.set(1,1,1);
+        scene.add(avatar);
+        animate();
+      },
+      undefined,
+      function(error) {
+        console.error('Error loading GLB:', error);
+      }
+    );
+
+    function animate() {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
