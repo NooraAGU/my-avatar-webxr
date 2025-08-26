@@ -9,11 +9,12 @@
 </head>
 <body>
   <script type="module">
-    // Import Three.js and modules from CDN
+    // Import Three.js modules from CDN
     import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js';
     import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/loaders/GLTFLoader.js';
     import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/controls/OrbitControls.js';
 
+    // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({antialias:true});
@@ -24,20 +25,20 @@
     const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1.2);
     scene.add(hemiLight);
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    dirLight.position.set(1,2,3);
+    dirLight.position.set(1, 2, 3);
     scene.add(dirLight);
 
     // Controls
     const controls = new OrbitControls(camera, renderer.domElement);
-    controls.target.set(0,0,0);
+    controls.target.set(0, 0, 0);
     controls.update();
 
     camera.position.set(0, 1.5, 5);
 
-    // Load GLB avatar
+    // Load avatar
     const loader = new GLTFLoader();
     loader.load(
-      './avatar.glb', // must be in same folder as index.html
+      './avatar.glb', // must be in the same folder as index.html
       function(gltf) {
         const avatar = gltf.scene;
         avatar.position.set(0, -0.5, 0);
@@ -51,11 +52,13 @@
       }
     );
 
+    // Animation loop
     function animate() {
       requestAnimationFrame(animate);
       renderer.render(scene, camera);
     }
 
+    // Resize handling
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
