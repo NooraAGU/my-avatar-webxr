@@ -9,12 +9,11 @@
 </head>
 <body>
   <script type="module">
-    // Import Three.js and modules
+    // Import Three.js and modules from CDN
     import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js';
     import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/loaders/GLTFLoader.js';
     import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/controls/OrbitControls.js';
 
-    // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({antialias:true});
@@ -28,7 +27,7 @@
     dirLight.position.set(1,2,3);
     scene.add(dirLight);
 
-    // Orbit Controls
+    // Controls
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.target.set(0,0,0);
     controls.update();
@@ -38,7 +37,7 @@
     // Load GLB avatar
     const loader = new GLTFLoader();
     loader.load(
-      'avatar.glb', // make sure avatar.glb is in the same folder
+      './avatar.glb', // must be in same folder as index.html
       function(gltf) {
         const avatar = gltf.scene;
         avatar.position.set(0, -0.5, 0);
