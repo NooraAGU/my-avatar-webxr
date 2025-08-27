@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Ready Player Me Avatar</title>
+  <title>Three.js Blue Cube Test</title>
   <style>
     body { margin: 0; overflow: hidden; background: #ffffff; }
     canvas { display: block; }
@@ -10,14 +10,12 @@
 </head>
 <body>
 <script type="module">
-  // Import Three.js modules from CDN
   import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js';
-  import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/loaders/GLTFLoader.js';
   import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/controls/OrbitControls.js';
 
   // Scene setup
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
@@ -37,44 +35,21 @@
   // Camera initial position
   camera.position.set(0, 1.5, 5);
 
-  // Load GLB avatar
-  const loader = new GLTFLoader();
-  let avatar;
-  loader.load(
-    './avatar.glb', // must be in the same folder as index.html
-    function(gltf) {
-      avatar = gltf.scene;
-      avatar.position.set(0, -0.5, 0);
-      avatar.scale.set(1,1,1);
-      scene.add(avatar);
-      animate();
-    },
-    undefined,
-    function(error) {
-      console.error('Error loading GLB:', error);
-      // Optionally display a message to the user if loading fails
-      const message = document.createElement('div');
-      message.textContent = "Failed to load avatar.glb. Make sure the file exists and is accessible.";
-      message.style.position = "absolute";
-      message.style.top = "20px";
-      message.style.left = "20px";
-      message.style.background = "#fff";
-      message.style.color = "#f00";
-      message.style.padding = "10px";
-      message.style.zIndex = 1000;
-      document.body.appendChild(message);
-    }
-  );
+  // Add a blue cube
+  const geometry = new THREE.BoxGeometry();
+  const material = new THREE.MeshStandardMaterial({ color: 0x0077ff });
+  const cube = new THREE.Mesh(geometry, material);
+  cube.position.set(0, 1, 0);
+  scene.add(cube);
 
   // Animation loop
   function animate() {
     requestAnimationFrame(animate);
-    if(avatar) {
-      avatar.rotation.y += 0.01; // auto-rotate
-    }
+    cube.rotation.y += 0.01; // auto-rotate
     controls.update();
     renderer.render(scene, camera);
   }
+  animate();
 
   // Handle window resize
   window.addEventListener('resize', () => {
