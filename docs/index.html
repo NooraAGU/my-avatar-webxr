@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ready Player Me Avatar</title>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
+      }
+    }
+  </script>
+  <style>
+    body { margin: 0; overflow: hidden; background: #ffffff; }
+    canvas { display: block; }
+    #error-message {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: #ff4757;
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      display: none;
+      z-index: 1001;
+    }
+    #controls-info {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      z-index: 1000;
+    }
+    #status {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <div id="status">Loading...</div>
+  <div id="error-message"></div>
+  <div id="controls-info">
+    <strong>Controls:</strong><br>
+    • Mouse: Rotate view<br>
+    • Scroll: Zoom in/out<br>
+    • Right-click + drag: Pan
+  </div>
+
+<script type="module">
+  import * as THREE from 'three';
+  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+  console.log('Starting 3D Avatar Viewer...');
+  
+  // DOM elements
+  const statusDiv = document.getElementById('status');
+  const errorMessage = document.getElementById('error-message');
+  
+  function updateStatus(message) {
+    statusDiv.textContent = message;
+    console.log('Status:', message);
+  }
+  
+  function showError(message) {
+    console.error('Error:', message);
+    errorMessage.textContent = message;
+    errorMessage.style.display = 'block';
+    updateStatus('Error occurred');
+  }
+
+  updateStatus('Initializing 3D scene...');
+
+  // Scene setup
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  // Lighting
+  const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1.2);
+  scene.add(hemiLight);
+  const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+  dirLight.position.set(1, 2, 3);
+  scene.add(dirLight);
+
+  // Orbit controls
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 1, 0);
+  controls.update();
+
+  // Camera initial position
+  camera.position.set(0, 1.5, 5);
+
+  updateStatus('Scene ready - showing test cube');
+
+  // Create and show test cube immediately
+  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const material = new THREE.MeshStandardMaterial({ color: 0x3498db });
+  const testCube = new THREE.Mesh(geometry, material);
+  testCube.position.set(0, 0.5, 0);
+  scene.add(testCube);
+
+  // Start animation with test cube
+  function animate() {
+    requestAnimationFrame(animate);
+    testCube.rotation.y += 0.01;
+    testCube.rotation.x += 0.005;
+    controls.update();
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  updateStatus('Loading avatar...');
+
+  // Load GLB avatar
+  const loader = new GLTFLoader();
+  
+  loader.load(
+    './avatar.glb',
+    function(gltf) {
+      console.log('Avatar loaded successfully!', gltf);
+      updateStatus('Avatar loaded!');
+      
+      // Remove test cube
+      scene.remove(testCube);
+      
+      // Add avatar
+      const avatar = gltf.scene;
+      avatar.position.set(0, -0.5, 0);
+      avatar.scale.set(1,1,1);
+      scene.add(avatar);
+      
+      // Update animation for avatar
+      function animateAvatar() {
+        requestAnimationFrame(animateAvatar);
+        avatar.rotation.y += 0.01;
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      
+      // Switch to avatar animation
+      animateAvatar();
+    },
+    function(progress) {
+      const percent = Math.round((progress.loaded / progress.total) * 100);
+      updateStatus(`Loading avatar: ${percent}%`);
+      console.log('Avatar loading progress:', percent + '%');
+    },
+    function(error) {
+      console.error('Error loading GLB:', error);
+      showError("Avatar failed to load. Showing test cube instead.");
+      updateStatus('Using test cube');
+      // Keep the test cube running
+    }
+  );
+
+  // Handle window resize
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  // Initial status update
+  setTimeout(() => {
+    if (statusDiv.textContent === 'Loading avatar...') {
+      updateStatus('Avatar loading takes 10-30 seconds...');
+    }
+  }, 3000);
+</script>
+</body>
+</html>
