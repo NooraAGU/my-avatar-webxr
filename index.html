@@ -41,7 +41,7 @@
   const loader = new GLTFLoader();
   let avatar;
   loader.load(
-    './avatar.glb', // must be in the same folder
+    './avatar.glb', // must be in the same folder as index.html
     function(gltf) {
       avatar = gltf.scene;
       avatar.position.set(0, -0.5, 0);
@@ -52,6 +52,17 @@
     undefined,
     function(error) {
       console.error('Error loading GLB:', error);
+      // Optionally display a message to the user if loading fails
+      const message = document.createElement('div');
+      message.textContent = "Failed to load avatar.glb. Make sure the file exists and is accessible.";
+      message.style.position = "absolute";
+      message.style.top = "20px";
+      message.style.left = "20px";
+      message.style.background = "#fff";
+      message.style.color = "#f00";
+      message.style.padding = "10px";
+      message.style.zIndex = 1000;
+      document.body.appendChild(message);
     }
   );
 
