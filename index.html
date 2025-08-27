@@ -7,16 +7,15 @@
     body { margin: 0; overflow: hidden; background: #ffffff; }
     canvas { display: block; }
   </style>
+  <script src="./js/three.min.js"></script>
+  <script src="./js/GLTFLoader.js"></script>
+  <script src="./js/OrbitControls.js"></script>
 </head>
 <body>
-<script type="module">
-  // Import Three.js modules from CDN
-  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js';
-  import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/loaders/GLTFLoader.js';
-  import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/controls/OrbitControls.js';
-
+<script>
   // Scene setup
   const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xdddddd);
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -30,7 +29,7 @@
   scene.add(dirLight);
 
   // Orbit controls
-  const controls = new OrbitControls(camera, renderer.domElement);
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.target.set(0, 1, 0);
   controls.update();
 
@@ -38,11 +37,12 @@
   camera.position.set(0, 1.5, 5);
 
   // Load GLB avatar
-  const loader = new GLTFLoader();
+  const loader = new THREE.GLTFLoader();
   let avatar;
   loader.load(
     './avatar.glb', // must be in the same folder
     function(gltf) {
+      console.log('GLB model loaded successfully.');
       avatar = gltf.scene;
       avatar.position.set(0, -0.5, 0);
       avatar.scale.set(1,1,1);
