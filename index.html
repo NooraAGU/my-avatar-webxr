@@ -38,16 +38,11 @@
   camera.position.set(0, 1.5, 5);
 
   // Load GLB avatar
-  const loader = new GLTFLoader();
-  let avatar;
-  loader.load(
-    './avatar.glb', // must be in the same folder as index.html
-    function(gltf) {
-      avatar = gltf.scene;
-      avatar.position.set(0, -0.5, 0);
-      avatar.scale.set(1,1,1);
-      scene.add(avatar);
-      animate();
+const geometry = new THREE.BoxGeometry();
+const material = new THREE.MeshStandardMaterial({ color: 0x0077ff });
+const cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
+animate();
     },
     undefined,
     function(error) {
@@ -85,3 +80,4 @@
 </script>
 </body>
 </html>
+
