@@ -1,20 +1,23 @@
-# Ready Player Me Avatar Viewer
+# Virtual FAQ Assistant - 3D Avatar
 
-A web-based 3D avatar viewer for Ready Player Me models using Three.js with interactive controls.
+A professional virtual chat agent using Ready Player Me 3D avatars. Perfect for customer support, FAQ systems, and interactive help desks.
 
 ## ✨ Features
 
-- 🎮 Interactive 3D avatar display
-- 🖱️ Full mouse controls (rotate, zoom, pan)
-- 💡 Professional lighting setup
-- 📱 Responsive design
-- 🔄 Auto-rotation animation
-- ⚡ Fast loading with progress indicators
-- 🎯 Fallback test cube if avatar fails to load
+- 🤖 Professional virtual assistant interface
+- 👤 Lifelike 3D Ready Player Me avatar
+- 💼 Suitable for business FAQ and support
+- 🎭 Natural idle animations (breathing, subtle movements)
+- 💡 Professional lighting and styling
+- 📱 Responsive design for all devices
+- ⚡ Fast loading with status indicators
+- 🎯 Glass-morphism UI design
 
 ## 🚀 Live Demo
 
 Visit: `https://yourusername.github.io/your-repo-name/`
+
+*Your professional virtual assistant is ready to help with customer inquiries*
 
 ## 📋 Setup Instructions
 
