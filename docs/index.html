@@ -2,20 +2,60 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Ready Player Me Avatar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ready Player Me Avatar Viewer</title>
   <style>
-    body { margin: 0; overflow: hidden; background: #ffffff; }
-    canvas { display: block; }
+    body { 
+      margin: 0; 
+      overflow: hidden; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Arial', sans-serif;
+    }
+    canvas { 
+      display: block; 
+      border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    #loading {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    #loading.hidden { display: none; }
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
     #error-message {
       position: fixed;
       top: 20px;
       left: 20px;
-      background: #ff4757;
+      background: rgba(255, 71, 87, 0.95);
       color: white;
-      padding: 15px;
-      border-radius: 8px;
+      padding: 15px 20px;
+      border-radius: 10px;
       display: none;
       z-index: 1001;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      max-width: 300px;
     }
     #controls-info {
       position: fixed;
@@ -23,23 +63,68 @@
       left: 20px;
       background: rgba(0, 0, 0, 0.7);
       color: white;
-      padding: 15px;
-      border-radius: 8px;
+      padding: 15px 20px;
+      border-radius: 10px;
       font-size: 14px;
       z-index: 1000;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    #title {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #333;
+      padding: 15px 20px;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: bold;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    @media (max-width: 768px) {
+      #controls-info, #title {
+        font-size: 12px;
+        padding: 10px 15px;
+      }
+      #controls-info {
+        bottom: 10px;
+        left: 10px;
+        right: 10px;
+      }
+      #title {
+        top: 10px;
+        right: 10px;
+      }
     }
   </style>
 </head>
 <body>
+  <div id="loading">
+    <div class="spinner"></div>
+    <div>Loading Avatar...</div>
+  </div>
+  
   <div id="error-message"></div>
+  
+  <div id="title">Ready Player Me Avatar</div>
+  
   <div id="controls-info">
     <strong>Controls:</strong><br>
     • Mouse: Rotate view<br>
     • Scroll: Zoom in/out<br>
-    • Right-click + drag: Pan
+    • Right-click + drag: Pan<br>
+    • Double-click: Reset camera
   </div>
 
-  <!-- External script -->
-  <script type="module" src="script.js"></script>
+  <!-- Three.js CDN with proper loading order -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  
+  <!-- Main script -->
+  <script src="script.js"></script>
 </body>
 </html>
