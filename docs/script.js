@@ -1,8 +1,6 @@
-// Ensure WebGL support
-if (!THREE.WEBGL.isWebGLAvailable()) {
-  alert("WebGL not supported in this browser");
-  throw new Error("WebGL not supported");
-}
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.module.js";
+import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/loaders/GLTFLoader.js";
+import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.158.0/examples/jsm/controls/OrbitControls.js";
 
 // Scene setup
 const scene = new THREE.Scene();
@@ -18,9 +16,22 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.set(0, 1.5, 3);
 
 // Renderer setup
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+} catch (e) {
+  console.error(e);
+  const errorMessage = document.getElementById("error-message");
+  if (errorMessage) {
+    errorMessage.textContent = "Error: WebGL is not supported or enabled in your browser.";
+    errorMessage.style.display = "block";
+  }
+  // Stop execution if renderer fails
+  throw new Error("WebGL not available");
+}
+
 
 // Lighting
 const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1.2);
@@ -32,13 +43,13 @@ dirLight.position.set(5, 10, 7.5);
 scene.add(dirLight);
 
 // OrbitControls
-const controls = new THREE.OrbitControls(camera, renderer.domElement);
+const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 1, 0);
 controls.enableDamping = true;
 
 // Load GLB avatar
 let mixer;
-const loader = new THREE.GLTFLoader();
+const loader = new GLTFLoader();
 loader.load(
   "avatar.glb",
   function (gltf) {
